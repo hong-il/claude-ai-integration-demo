@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .actions {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .todo-list {
+            padding: 30px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        .todo-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid #667eea;
+        }
+        .todo-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .todo-item.done {
+            opacity: 0.6;
+            border-left-color: #28a745;
+        }
+        .todo-checkbox {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .todo-content {
+            flex-grow: 1;
+        }
+        .todo-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .todo-item.done .todo-title {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+        .todo-description {
+            color: #6c757d;
+            font-size: 0.95em;
+            margin-top: 5px;
+        }
+        .todo-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-delete {
+            padding: 8px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.2s;
+        }
+        .btn-delete:hover {
+            background: #c82333;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status-badge.done {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-badge.todo {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Todo List</h1>
+            <p>Manage your tasks efficiently</p>
+        </div>
+
+        <div class="actions">
+            <a href="/todos/create" class="btn">➕ New Todo</a>
+        </div>
+
+        <div class="todo-list">
+            <div th:if="${#lists.isEmpty(todos)}" class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <h2>No todos yet</h2>
+                <p>Create your first todo to get started!</p>
+            </div>
+
+            <div th:each="todo : ${todos}" 
+                 th:class="${todo.isDone} ? 'todo-item done' : 'todo-item'">
+                
+                <form th:action="@{/todos/{id}/toggle(id=${todo.id})}" method="post" style="display: inline;">
+                    <input type="checkbox" 
+                           class="todo-checkbox" 
+                           th:checked="${todo.isDone}"
+                           onchange="this.form.submit()">
+                </form>
+
+                <div class="todo-content">
+                    <div class="todo-title">
+                        <span th:text="${todo.title}"></span>
+                        <span th:class="${todo.isDone} ? 'status-badge done' : 'status-badge todo'"
+                              th:text="${todo.isDone} ? '✓ Done' : '⏳ Todo'"></span>
+                    </div>
+                    <div class="todo-description" th:if="${todo.description}" th:text="${todo.description}"></div>
+                </div>
+
+                <div class="todo-actions">
+                    <form th:action="@{/todos/{id}/delete(id=${todo.id})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn-delete" 
+                                onclick="return confirm('Are you sure you want to delete this todo?')">
+                            🗑️ Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
