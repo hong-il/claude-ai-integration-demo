@@ -32,3 +32,22 @@ Spring Boot 3.x, Spring Web, Spring Data JPA, H2DB
 5. Controller는 @Controller Annotation을 사용하고, Model에 데이터 넣어서 view에 전달해줘.
 6. thymeleaf 문법은 기본적인 것만 사용해줘.
 ```
+
+## 중간결과물
+1. list
+
+   <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/66ef9937-24cf-4330-890b-97eb88fe5dec" />
+
+2. create
+
+   <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/32a97b8a-3045-4d65-bd3a-d31c11b43809" />
+
+3. put
+
+   <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/dd276a76-3e64-4eed-bca9-9a68454d9021" />
+   
+5. delete
+
+   <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/4b540165-1249-4ce7-bb32-4c72986dc096" />
+
+   
